@@ -1,4 +1,4 @@
-﻿#include <opencv2/opencv.hpp>
+#include <opencv2/opencv.hpp>
 #include <string>
 #include <vector>
 #include <cmath>
@@ -306,6 +306,38 @@ int main()
 	{
 		printf("Best move: (Row %d, Col %d) <-> (Row %d, Col %d) | Score: %d\n",
 			move.first.first + 1, move.first.second + 1, move.second.first + 1, move.second.second + 1, move.score);
+
+		cv::Mat dimg = img.clone();
+
+		cv::Point pt1(
+			move.first.second * (BLOCK_SIZE + SPACING) + BLOCK_SIZE / 2,
+			move.first.first * (BLOCK_SIZE + SPACING) + BLOCK_SIZE / 2
+		);
+
+		cv::Point pt2(
+			move.second.second * (BLOCK_SIZE + SPACING) + BLOCK_SIZE / 2,
+			move.second.first * (BLOCK_SIZE + SPACING) + BLOCK_SIZE / 2
+		);
+
+		cv::arrowedLine(dimg, pt1, pt2, cv::Scalar(0, 0, 255), 3, cv::LINE_AA, 0, 0.1);
+
+		cv::circle(dimg, pt1, 10, cv::Scalar(255, 0, 0), 2);
+		cv::circle(dimg, pt2, 10, cv::Scalar(255, 0, 0), 2);
+
+		std::string score_text = "Score: " + std::to_string(move.score);
+		cv::putText(dimg, score_text, cv::Point(10, 30),
+			cv::FONT_HERSHEY_SIMPLEX, 1.0, cv::Scalar(0, 255, 0), 2);
+
+		cv::imshow("If294378tfuiof", dimg);
+
+		while (true)
+		{
+			int key = cv::waitKey(0) & 0xFF;
+			if (key == 'q' || key == 'Q')
+			{
+				break;
+			}
+		}
 	}
 
 	return 0;
